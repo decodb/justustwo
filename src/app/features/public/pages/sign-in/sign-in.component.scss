@@ -1,0 +1,207 @@
+@use '../../../../../styles/index.scss' as *;
+
+:host {
+  display: block;
+  min-height: 100dvh;
+  background-color: $color-bg;
+  background-image: radial-gradient($color-divider 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+}
+
+.signin {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1rem 2rem;
+}
+
+.back {
+  position: absolute;
+  top: 1.25rem;
+  left: 1rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.85rem;
+}
+
+// ---------- Terminal card ----------
+.term {
+  --c: #{$color-pink}; // lock colour: pink → red (error) → mint (success)
+  width: min(92vw, 420px);
+  background: $color-white;
+  border: 3px solid $color-border;
+  border-radius: 16px;
+  box-shadow: 6px 6px 0 $color-black;
+  overflow: hidden;
+  animation: pop-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
+  &--error { --c: #{$color-red}; }
+  &--ok { --c: #{$color-mint}; }
+
+  &__bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.6rem 0.9rem;
+    background: $color-black;
+    color: $color-white;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+  }
+
+  &__title { margin-left: 0.5rem; }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    padding: clamp(1.25rem, 5vw, 2rem);
+    text-align: center;
+  }
+
+  h1 { font-size: clamp(1.25rem, 5vw, 1.6rem); }
+  .hint { color: $color-text-secondary; font-size: 0.9rem; }
+}
+
+.dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  &--pink { background: $color-pink; }
+  &--yellow { background: $color-yellow; }
+  &--mint { background: $color-mint; }
+}
+
+// ---------- Lock ----------
+.lock {
+  width: 72px;
+  &__body { fill: var(--c); stroke: $color-black; stroke-width: 1.5; transition: fill 0.3s ease; }
+  &__shackle {
+    fill: none;
+    stroke: $color-black;
+    stroke-width: 2;
+    stroke-linecap: round;
+    transform-origin: 16px 11px;
+    transition: transform 0.5s cubic-bezier(0.3, 1.4, 0.5, 1);
+  }
+}
+.term--ok .lock__shackle { transform: translateY(-2px) rotate(28deg); }
+
+// ---------- Form ----------
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+  text-align: left;
+
+  label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: $color-text-secondary;
+  }
+}
+
+.field {
+  &--shake { animation: shake 0.4s ease; }
+
+  input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 1rem; // 16px+ stops iOS zooming in on focus
+    color: $color-text-primary;
+    background: $color-white;
+    border: 2px solid $color-input-border;
+    border-radius: 14px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+
+    &::placeholder { color: $color-text-muted; }
+    &:focus { outline: none; border-color: $color-border; box-shadow: 4px 4px 0 $color-black; }
+    &[aria-invalid='true'] { border-color: $color-input-border-error; background: $color-red-tint; }
+  }
+}
+
+.msg {
+  min-height: 1.25rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.8rem;
+  color: $color-red-tint-text;
+}
+
+.btn {
+  padding: 0.8rem 1.25rem;
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 1rem;
+  color: $color-black;
+  background: $color-action-primary;
+  border: 2px solid $color-border;
+  border-radius: 14px;
+  box-shadow: 4px 4px 0 $color-black;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.2s ease;
+
+  &:hover:not(:disabled) { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 $color-black; }
+  &:active:not(:disabled) { transform: translate(4px, 4px); box-shadow: 0 0 0 $color-black; }
+  &:disabled { opacity: 0.6; cursor: wait; }
+}
+
+// ---------- Success: "access granted" ----------
+.granted {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: 0.5rem;
+  animation: pop-in 0.4s ease both;
+
+  &__title {
+    padding: 0.3rem 0.8rem;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: $color-black;
+    background: $color-mint-tint;
+    border: 2px solid $color-border;
+    border-radius: 10px;
+  }
+
+  small { font-family: 'Space Mono', monospace; color: $color-text-muted; }
+}
+
+.bar {
+  width: 100%;
+  height: 16px;
+  background: $color-white;
+  border: 2px solid $color-border;
+  border-radius: 999px;
+  overflow: hidden;
+
+  &__fill {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: $color-mint;
+    animation: fill 2.2s linear forwards;
+  }
+}
+
+.dots::after { content: ''; animation: dots 1.2s steps(1) infinite; }
+
+// ---------- Keyframes ----------
+@keyframes shake {
+  20% { transform: translateX(-8px); } 40% { transform: translateX(7px); }
+  60% { transform: translateX(-5px); } 80% { transform: translateX(3px); }
+}
+@keyframes fill { to { width: 100%; } }
+@keyframes pop-in { from { opacity: 0; transform: translateY(14px) scale(0.97); } }
+@keyframes dots { 0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .field--shake { animation: none; }
+}
