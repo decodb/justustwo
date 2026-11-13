@@ -1,1 +1,88 @@
-<p>proposal works!</p>
+<main class="proposal">
+  <section class="term" [class.term--yes]="result() === 'yes'">
+    <header class="term__bar">
+      <span class="dot dot--pink"></span>
+      <span class="dot dot--yellow"></span>
+      <span class="dot dot--mint"></span>
+      <span class="term__title">our_story.txt</span>
+    </header>
+
+    <div class="term__body">
+      @if (phase() !== 'sent') {
+        <div class="story" aria-live="polite">
+          @for (line of typed(); track $index; let last = $last) {
+            <p class="line" [class.line--sys]="line.startsWith('>')">{{ line }}@if (last && phase() === 'typing') {<span class="cursor"></span>}</p>
+          }
+        </div>
+
+        @if (phase() === 'typing') {
+          <button class="skip" type="button" (click)="skip()">skip ›</button>
+        }
+
+        @if (phase() === 'question') {
+          <div class="ask">
+            <h1>will you be my girlfriend? 💗</h1>
+            <button class="choice choice--yes" type="button" (click)="pick('yes')">
+              <b>yes</b> — i agree to be your girlfriend
+            </button>
+            <button class="choice choice--no" type="button" (click)="pick('no')">
+              <b>no</b> — i can’t be your girlfriend
+            </button>
+          </div>
+        }
+      } @else {
+        <div class="sent" role="status">
+          <p class="sent__badge">RESPONSE DELIVERED</p>
+          <h1>{{ result() === 'yes' ? yesTitle : noTitle }}</h1>
+          <p>{{ result() === 'yes' ? yesMessage : noMessage }}</p>
+        </div>
+      }
+    </div>
+  </section>
+
+  @if (result() === 'yes') {
+    <div class="hearts" aria-hidden="true">
+      @for (h of hearts; track $index) {
+        <span
+          class="hearts__h"
+          [style.left.%]="h.left"
+          [style.font-size.px]="h.size"
+          [style.animation-duration.s]="h.dur"
+          [style.animation-delay.s]="h.delay"
+          >💗</span
+        >
+      }
+    </div>
+  }
+
+  @if (choice(); as c) {
+    <div class="overlay" (click)="cancel()">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="sure-title" (click)="$event.stopPropagation()">
+        <h2 id="sure-title">are you sure? {{ c === 'yes' ? '💗' : '🥺' }}</h2>
+        <p>
+          {{
+            c === 'yes'
+              ? 'you’re about to say YES to being my girlfriend.'
+              : 'you’re about to say NO. once you send it, i get it straight away.'
+          }}
+        </p>
+        <p class="modal__error" role="alert">{{ error() }}</p>
+        <div class="modal__actions">
+          <button
+            class="btn"
+            [class.btn--yes]="c === 'yes'"
+            [class.btn--no]="c === 'no'"
+            type="button"
+            (click)="confirm()"
+            [disabled]="sending()"
+          >
+            {{ sending() ? 'sending...' : 'yes, i’m sure' }}
+          </button>
+          <button class="btn btn--ghost" type="button" (click)="cancel()" [disabled]="sending()">
+            wait, go back
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</main>

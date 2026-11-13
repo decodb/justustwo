@@ -16,4 +16,11 @@ export class SupabaseService {
     if (error) throw error;
     return data === true;
   }
+
+  async submitResponse(answer: 'yes' | 'no'): Promise<void> {
+    const { error } = await this.client.functions.invoke('submit-response', {
+      body: { answer },
+    });
+    if (error) throw error;
+  }
 }

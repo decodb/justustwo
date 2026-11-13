@@ -1,0 +1,225 @@
+@use '../../../../../styles/index.scss' as *;
+
+:host {
+  display: block;
+  min-height: 100dvh;
+  background-color: $color-bg;
+  background-image: radial-gradient($color-divider 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+}
+
+.proposal {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+// ---------- Terminal card ----------
+.term {
+  width: min(94vw, 560px);
+  background: $color-white;
+  border: 3px solid $color-border;
+  border-radius: 16px;
+  box-shadow: 6px 6px 0 $color-black;
+  overflow: hidden;
+  animation: pop-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
+  &__bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.6rem 0.9rem;
+    background: $color-black;
+    color: $color-white;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+  }
+  &__title { margin-left: 0.5rem; }
+  &__body { position: relative; padding: clamp(1.25rem, 5vw, 2rem); min-height: 320px; }
+}
+
+.dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  &--pink { background: $color-pink; }
+  &--yellow { background: $color-yellow; }
+  &--mint { background: $color-mint; }
+}
+
+// ---------- Story ----------
+.line {
+  max-width: none;
+  margin-bottom: 0.6rem;
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(0.85rem, 3.2vw, 1rem);
+  line-height: 1.6;
+  color: $color-text-primary;
+  min-height: 1.6em;
+
+  &--sys { color: $color-text-muted; }
+}
+
+.cursor {
+  display: inline-block;
+  width: 0.6em;
+  height: 1em;
+  margin-left: 3px;
+  vertical-align: -2px;
+  background: $color-mint;
+  animation: blink 1s steps(2) infinite;
+}
+
+.skip {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  padding: 0.3rem 0.7rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  color: $color-text-secondary;
+  background: transparent;
+  border: 2px solid $color-input-border;
+  border-radius: 10px;
+  cursor: pointer;
+  &:hover { border-color: $color-border; }
+}
+
+// ---------- The question ----------
+.ask {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-top: 1.5rem;
+  animation: pop-in 0.5s ease both;
+
+  h1 { font-size: clamp(1.4rem, 5.5vw, 1.9rem); margin-bottom: 0.4rem; }
+}
+
+.choice {
+  padding: 1rem 1.1rem;
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(0.85rem, 3.2vw, 1rem);
+  text-align: left;
+  line-height: 1.4;
+  color: $color-black;
+  border: 2px solid $color-border;
+  border-radius: 14px;
+  box-shadow: 4px 4px 0 $color-black;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+
+  b { text-transform: uppercase; }
+  &--yes { background: $color-mint; }
+  &--no { background: $color-pink; }
+
+  &:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 $color-black; }
+  &:active { transform: translate(4px, 4px); box-shadow: 0 0 0 $color-black; }
+}
+
+// ---------- Confirm modal ----------
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(18, 17, 23, 0.55);
+  animation: fade-in 0.2s ease both;
+}
+
+.modal {
+  width: min(92vw, 380px);
+  padding: 1.5rem;
+  background: $color-white;
+  border: 3px solid $color-border;
+  border-radius: 16px;
+  box-shadow: 6px 6px 0 $color-black;
+  animation: pop-in 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
+  h2 { font-size: 1.4rem; margin-bottom: 0.5rem; }
+  p { max-width: none; }
+
+  &__error {
+    min-height: 1.25rem;
+    margin-top: 0.5rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: $color-red-tint-text;
+  }
+  &__actions { display: flex; flex-direction: column; gap: 0.7rem; margin-top: 0.5rem; }
+}
+
+.btn {
+  padding: 0.8rem 1.1rem;
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: $color-black;
+  border: 2px solid $color-border;
+  border-radius: 14px;
+  box-shadow: 4px 4px 0 $color-black;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.2s ease;
+
+  &--yes { background: $color-mint; }
+  &--no { background: $color-pink; }
+  &--ghost { background: $color-white; }
+
+  &:hover:not(:disabled) { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 $color-black; }
+  &:active:not(:disabled) { transform: translate(4px, 4px); box-shadow: 0 0 0 $color-black; }
+  &:disabled { opacity: 0.6; cursor: wait; }
+}
+
+// ---------- After answering ----------
+.sent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding-block: 2rem;
+  text-align: center;
+  animation: pop-in 0.5s ease both;
+
+  &__badge {
+    padding: 0.3rem 0.8rem;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: $color-black;
+    background: $color-mint-tint;
+    border: 2px solid $color-border;
+    border-radius: 10px;
+  }
+  h1 { font-size: clamp(1.5rem, 6vw, 2.1rem); }
+}
+
+.hearts {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 40;
+
+  &__h {
+    position: absolute;
+    bottom: -3rem;
+    animation: float-up linear infinite;
+  }
+}
+
+// ---------- Keyframes ----------
+@keyframes blink { 50% { opacity: 0; } }
+@keyframes fade-in { from { opacity: 0; } }
+@keyframes pop-in { from { opacity: 0; transform: translateY(14px) scale(0.97); } }
+@keyframes float-up {
+  from { transform: translateY(0) rotate(-10deg); opacity: 1; }
+  to { transform: translateY(-110vh) rotate(15deg); opacity: 0.2; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hearts__h { animation-duration: 8s !important; }
+}
