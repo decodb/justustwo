@@ -1,0 +1,115 @@
+@use '../../../../../styles/index.scss' as *;
+
+$shadow-hard: 4px 4px 0 $color-black;
+
+:host {
+  display: block;
+  min-height: 100dvh;
+  background-color: $color-bg;
+  background-image: radial-gradient($color-divider 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+}
+
+.gallery {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1rem, 3vh, 1.75rem);
+  padding: 1.25rem 1rem 2rem;
+  overflow-x: hidden; // thrown cards fly off-screen
+
+  &__title { font-size: clamp(1.5rem, 5vw, 2.25rem); }
+}
+
+.back {
+  align-self: flex-start;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.85rem;
+}
+
+// ---------- The pile ----------
+.stack {
+  position: relative;
+  width: min(78vw, 340px);
+  aspect-ratio: 4 / 5;
+  margin-block: 0.5rem;
+  touch-action: pan-y; // vertical scroll still works, horizontal = swipe
+  user-select: none;
+  cursor: grab;
+
+  &--drag { cursor: grabbing; .card { transition: none; } }
+}
+
+.card {
+  position: absolute;
+  inset: 0;
+  padding: 10px 10px 38px; // polaroid frame
+  background: $color-white;
+  border: 3px solid $color-border;
+  border-radius: 14px;
+  box-shadow: $shadow-hard;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 2px solid $color-border;
+    border-radius: 8px;
+    pointer-events: none;
+  }
+
+  figcaption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 10px;
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: $color-text-secondary;
+  }
+}
+
+// ---------- Counter ----------
+.counter {
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: $color-text-primary;
+}
+
+.pips { display: flex; gap: 6px; }
+
+.pip {
+  width: 12px;
+  height: 12px;
+  border: 2px solid $color-border;
+  border-radius: 4px;
+  background: $color-white;
+  transition: background 0.2s ease;
+  &--on { background: $color-pink; }
+}
+
+// ---------- Buttons ----------
+.controls { display: flex; gap: 1rem; }
+
+.btn {
+  padding: 0.7rem 1.25rem;
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  color: $color-black;
+  border: 2px solid $color-border;
+  border-radius: 14px;
+  box-shadow: $shadow-hard;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.2s ease;
+
+  &--mint { background: $color-mint; }
+  &--pink { background: $color-pink; }
+
+  &:hover:not(:disabled) { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 $color-black; }
+  &:active:not(:disabled) { transform: translate(4px, 4px); box-shadow: 0 0 0 $color-black; }
+  &:disabled { opacity: 0.35; box-shadow: none; cursor: not-allowed; }
+}

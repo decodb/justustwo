@@ -1,1 +1,52 @@
-<p>home works!</p>
+@if (loading()) {
+  <section class="intro" (click)="skipIntro()" role="status" aria-live="polite">
+    <div class="intro__stage">
+      <svg class="heart" viewBox="0 0 110 110" aria-hidden="true">
+        <path class="heart__shadow" transform="translate(6 6)"
+          d="M50 90C8 60 4 30 26 17c13-7 24 2 24 11 0-9 11-18 24-11 22 13 18 43-24 73Z" />
+        <path class="heart__body"
+          d="M50 90C8 60 4 30 26 17c13-7 24 2 24 11 0-9 11-18 24-11 22 13 18 43-24 73Z" />
+      </svg>
+    </div>
+    <p class="intro__text">decrypting<span class="dots"></span></p>
+    <small>tap to skip</small>
+  </section>
+} @else {
+  <main class="desk">
+    <p class="desk__status">&gt; secure_connection: established<span class="cursor"></span></p>
+    <h1 class="desk__title">for_you.exe</h1>
+
+    <nav class="folders" aria-label="Main folders">
+      @for (f of folders; track f.route) {
+        <a [class]="'folder folder--' + f.color" [routerLink]="f.route">
+          <span class="folder__shape">
+            <span class="folder__glyph">
+              @switch (f.icon) {
+                @case ('gallery') {
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="3" y="4" width="18" height="16" rx="3" />
+                    <circle cx="9" cy="10" r="1.6" />
+                    <path d="M4 18l5-5 4 4 3-3 4 4" />
+                  </svg>
+                }
+                @case ('lock') {
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="5" y="11" width="14" height="10" rx="2.5" />
+                    <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+                    <circle cx="12" cy="16" r="1.2" />
+                  </svg>
+                }
+                @case ('mystery') {
+                  <span class="folder__qmark" aria-hidden="true">?</span>
+                }
+              }
+            </span>
+          </span>
+          <span class="folder__label">{{ f.label }}</span>
+        </a>
+      }
+    </nav>
+
+    <button class="replay" type="button" (click)="replayIntro()">↻ replay intro</button>
+  </main>
+}

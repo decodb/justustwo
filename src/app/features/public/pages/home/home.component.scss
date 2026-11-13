@@ -1,0 +1,196 @@
+@use '../../../../../styles/index.scss' as *;
+
+$radius-md: 14px;
+$shadow-hard: 4px 4px 0 $color-black;
+$shadow-hard-hover: 7px 7px 0 $color-black;
+
+:host {
+  display: block;
+  min-height: 100dvh;
+  background-color: $color-bg;
+  background-image: radial-gradient($color-divider 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+}
+
+// ---------- Intro: spinning heart ----------
+.intro {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  cursor: pointer;
+  animation: fade-in 0.4s ease both;
+
+  &__stage { perspective: 600px; }
+
+  &__text {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    color: $color-text-primary;
+  }
+}
+
+.heart {
+  width: clamp(110px, 30vw, 170px);
+  animation: spin 2.4s linear infinite;
+  &__body { fill: $color-pink; stroke: $color-black; stroke-width: 4; stroke-linejoin: round; }
+  &__shadow { fill: $color-black; }
+}
+
+.dots::after {
+  content: '';
+  animation: dots 1.2s steps(1) infinite;
+}
+
+// ---------- Desk ----------
+.desk {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 2rem 1rem;
+  animation: fade-up 0.6s ease both;
+
+  &__status {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(0.75rem, 2.8vw, 0.95rem);
+    color: $color-text-muted;
+  }
+
+  &__title { margin-bottom: clamp(1.5rem, 6vw, 3rem); }
+}
+
+.cursor {
+  display: inline-block;
+  width: 0.6em;
+  height: 1em;
+  margin-left: 4px;
+  vertical-align: -2px;
+  background: $color-mint;
+  animation: blink 1s steps(2) infinite;
+}
+
+// ---------- Folders in a V ----------
+.folders {
+  display: flex;
+  align-items: flex-start;       // outer folders sit high…
+  justify-content: center;
+  gap: clamp(0.75rem, 4vw, 3rem);
+  width: 100%;
+}
+
+.folder {
+  --c: #{$color-mint};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: clamp(84px, 24vw, 170px);
+  text-decoration: none;
+
+  &--mint { --c: #{$color-mint}; }
+  &--pink { --c: #{$color-pink}; }
+  &--yellow { --c: #{$color-yellow}; }
+
+  &:nth-child(2) { margin-top: clamp(2.5rem, 10vw, 6rem); } // …centre drops low = V
+
+  &__shape {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    aspect-ratio: 1.25;
+    background: var(--c);
+    border: 3px solid $color-border;
+    border-radius: 0 $radius-md $radius-md $radius-md;
+    box-shadow: $shadow-hard;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+    // folder tab
+    &::before {
+      content: '';
+      position: absolute;
+      left: -3px;
+      bottom: calc(100% - 3px);
+      width: 42%;
+      height: 18%;
+      background: var(--c);
+      border: 3px solid $color-border;
+      border-bottom: 0;
+      border-radius: 10px 10px 0 0;
+    }
+  }
+
+  &__glyph {
+    width: 42%;
+    svg {
+      width: 100%;
+      fill: none;
+      stroke: $color-black;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+  }
+
+  &__qmark {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: clamp(1.75rem, 8vw, 3.5rem);
+    line-height: 1;
+    color: $color-black;
+  }
+
+  &__label {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(0.7rem, 2.6vw, 0.95rem);
+    color: $color-text-primary;
+    padding: 0.1rem 0.4rem;
+    border-radius: 6px;
+    transition: background 0.15s ease;
+  }
+
+  &:hover &__shape,
+  &:focus-visible &__shape {
+    transform: translate(-3px, -3px);
+    box-shadow: $shadow-hard-hover;
+  }
+  &:hover &__label { background: var(--c); }
+  &:active &__shape { transform: translate(3px, 3px); box-shadow: 0 0 0 $color-black; }
+}
+
+// ---------- Replay button ----------
+.replay {
+  margin-top: clamp(1.5rem, 5vw, 2.5rem);
+  padding: 0.5rem 0.8rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: $color-black;
+  background: $color-yellow;
+  border: 2px solid $color-border;
+  border-radius: 12px;
+  box-shadow: 3px 3px 0 $color-black;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 $color-black; }
+  &:active { transform: translate(3px, 3px); box-shadow: 0 0 0 $color-black; }
+}
+
+// ---------- Keyframes ----------
+@keyframes spin { to { transform: rotateY(360deg); } }
+@keyframes blink { 50% { opacity: 0; } }
+@keyframes fade-in { from { opacity: 0; } }
+@keyframes fade-up { from { opacity: 0; transform: translateY(14px); } }
+@keyframes dots {
+  0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heart { animation-duration: 6s; }
+}

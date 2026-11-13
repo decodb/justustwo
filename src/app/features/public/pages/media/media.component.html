@@ -1,1 +1,38 @@
-<p>media works!</p>
+<main class="gallery">
+  <a class="back" routerLink="/">&lt; /home</a>
+  <h1 class="gallery__title">/our_gallery</h1>
+
+  <div
+    class="stack"
+    [class.stack--drag]="dragging()"
+    (pointerdown)="onDown($event)"
+    (pointermove)="onMove($event)"
+    (pointerup)="onUp()"
+    (pointercancel)="onUp()"
+    aria-label="Photo stack. Swipe or use the buttons."
+  >
+    @for (photo of photos; track photo.src; let i = $index) {
+        <figure class="card" [style]="cardStyle(i)">
+            <img
+            [src]="photo.src"
+            [alt]="photo.caption"
+            draggable="false"
+            />
+            <figcaption>{{ photo.caption }}</figcaption>
+        </figure>
+    }
+  </div>
+
+  <p class="counter" aria-live="polite">{{ index() + 1 }}/{{ total }}</p>
+
+  <div class="pips" aria-hidden="true">
+    @for (p of photos; track p; let i = $index) {
+      <span class="pip" [class.pip--on]="i <= index()"></span>
+    }
+  </div>
+
+  <div class="controls">
+    <button class="btn btn--pink" type="button" (click)="prev()" [disabled]="isFirst()">← back</button>
+    <button class="btn btn--mint" type="button" (click)="next()" [disabled]="isLast()">next →</button>
+  </div>
+</main>
