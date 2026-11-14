@@ -1,8 +1,9 @@
 import { Component, computed, HostListener, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-media',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './media.component.html',
   styleUrl: './media.component.scss'
 })
