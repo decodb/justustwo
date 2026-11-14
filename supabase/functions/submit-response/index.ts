@@ -38,12 +38,24 @@ Deno.serve(async (req) => {
 
     const supabase = createClient(Deno.env.get('SUPABASE_URL')!, secretKey);
 
+    // Only one answer is ever accepted (also stops double emails)
+    const { data: existing, error: lookupError } = await supabase
+      .from('proposal_responses')
+      .select('answer')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (lookupError) {
+      console.error('lookup failed', lookupError);
+      return json({ error: 'could not check' }, 500);
+    }
+    if (existing) return json({ ok: true, answer: existing.answer, alreadyAnswered: true });
+
     // 1. Save her answer
     const { error: dbError } = await supabase.from('proposal_responses').insert({ answer });
     if (dbError) {
       console.error('insert failed', dbError);
-      // "detail" is only here to help you debug. Remove it once everything works.
-      return json({ error: 'could not save', detail: dbError.message }, 500);
+      return json({ error: 'could not save' }, 500);
     }
 
     // 2. Email you
@@ -74,9 +86,9 @@ Deno.serve(async (req) => {
 
     // The answer is already saved, so don't show her an error if only the email failed
     if (!res.ok) console.error('email failed', res.status, await res.text());
-    return json({ ok: true, emailed: res.ok });
+    return json({ ok: true, answer, emailed: res.ok });
   } catch (e) {
     console.error('unexpected error', e);
-    return json({ error: 'unexpected error', detail: String(e) }, 500);
+    return json({ error: 'unexpected error' }, 500);
   }
 });

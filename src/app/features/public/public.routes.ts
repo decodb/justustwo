@@ -2,6 +2,7 @@ import { Routes } from "@angular/router";
 import { HomeComponent } from "./pages/home/home.component";
 import { MediaComponent } from "./pages/media/media.component";
 import { SignInComponent } from "./pages/sign-in/sign-in.component";
+import { AboutUsComponent } from "./pages/about-us/about-us.component";
 
 export const PUBLIC_ROUTES: Routes = [
     {
@@ -15,5 +16,9 @@ export const PUBLIC_ROUTES: Routes = [
     {
         path: 'sign-in',
         component: SignInComponent
+    },
+    {
+        path: 'coming-soon',
+        component: AboutUsComponent
     }
 ];

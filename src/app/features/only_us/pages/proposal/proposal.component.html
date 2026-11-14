@@ -8,33 +8,44 @@
     </header>
 
     <div class="term__body">
-      @if (phase() !== 'sent') {
-        <div class="story" aria-live="polite">
-          @for (line of typed(); track $index; let last = $last) {
-            <p class="line" [class.line--sys]="line.startsWith('>')">{{ line }}@if (last && phase() === 'typing') {<span class="cursor"></span>}</p>
-          }
+      <!-- Your message: typed out the first time, shown in full once she has answered -->
+      <div class="story" aria-live="polite">
+        @for (line of typed(); track $index; let last = $last) {
+          <p class="line" [class.line--sys]="line.startsWith('>')">{{ line }}@if (last && phase() === 'typing') {<span class="cursor"></span>}</p>
+        }
+      </div>
+
+      @if (phase() === 'loading') {
+        <p class="line line--sys">&gt; checking file status...<span class="cursor"></span></p>
+      }
+
+      @if (phase() === 'typing') {
+        <button class="skip" type="button" (click)="skip()">skip ›</button>
+      }
+
+      <!-- Buttons: only while she hasn't answered -->
+      @if (phase() === 'question') {
+        <div class="ask">
+          <h1>will you be my girlfriend? 💗</h1>
+          <button class="choice choice--yes" type="button" (click)="pick('yes')">
+            <b>yes</b> — i agree to be your girlfriend
+          </button>
+          <button class="choice choice--no" type="button" (click)="pick('no')">
+            <b>no</b> — i can’t be your girlfriend
+          </button>
         </div>
+      }
 
-        @if (phase() === 'typing') {
-          <button class="skip" type="button" (click)="skip()">skip ›</button>
-        }
-
-        @if (phase() === 'question') {
-          <div class="ask">
-            <h1>will you be my girlfriend? 💗</h1>
-            <button class="choice choice--yes" type="button" (click)="pick('yes')">
-              <b>yes</b> — i agree to be your girlfriend
-            </button>
-            <button class="choice choice--no" type="button" (click)="pick('no')">
-              <b>no</b> — i can’t be your girlfriend
-            </button>
-          </div>
-        }
-      } @else {
+      <!-- After she has answered: no buttons, just the result -->
+      @if (phase() === 'sent') {
         <div class="sent" role="status">
-          <p class="sent__badge">RESPONSE DELIVERED</p>
+          <p class="sent__q">will you be my girlfriend? 💗</p>
+          <p class="sent__badge" [class.sent__badge--no]="result() === 'no'">
+            {{ result() === 'yes' ? yesBadge : noBadge }}
+          </p>
           <h1>{{ result() === 'yes' ? yesTitle : noTitle }}</h1>
           <p>{{ result() === 'yes' ? yesMessage : noMessage }}</p>
+          <p class="sent__file">&gt; status: closed. response received.</p>
         </div>
       }
     </div>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient, FunctionsFetchError, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -17,10 +17,24 @@ export class SupabaseService {
     return data === true;
   }
 
-  async submitResponse(answer: 'yes' | 'no'): Promise<void> {
-    const { error } = await this.client.functions.invoke('submit-response', {
+  async submitResponse(answer: 'yes' | 'no'): Promise<'yes' | 'no'> {
+    const { data, error } = await this.client.functions.invoke('submit-response', {
       body: { answer },
     });
+    if (error) {
+      if (error instanceof FunctionsFetchError) {
+        console.error('function said:', await error.context.json());
+      }
+      throw error;
+    }
+    // If she had already answered, the server returns the answer on record
+    return data?.answer === 'yes' || data?.answer === 'no' ? data.answer : answer;
+  }
+
+  /** Her recorded answer, or null if she hasn't answered yet */
+  async getResponse(): Promise<'yes' | 'no' | null> {
+    const { data, error } = await this.client.rpc('get_proposal_response');
     if (error) throw error;
+    return data === 'yes' || data === 'no' ? data : null;
   }
 }

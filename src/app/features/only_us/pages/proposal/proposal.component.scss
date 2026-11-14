@@ -180,7 +180,9 @@
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  padding-block: 2rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px dashed $color-input-border;
   text-align: center;
   animation: pop-in 0.5s ease both;
 
@@ -193,6 +195,18 @@
     background: $color-mint-tint;
     border: 2px solid $color-border;
     border-radius: 10px;
+  }
+  &__q {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: clamp(1rem, 4vw, 1.2rem);
+    color: $color-text-primary;
+  }
+  &__badge--no { background: $color-pink-tint; }
+  &__file {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: $color-text-muted;
   }
   h1 { font-size: clamp(1.5rem, 6vw, 2.1rem); }
 }

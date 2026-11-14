@@ -8,13 +8,14 @@ import { Component, computed, HostListener, signal } from '@angular/core';
 })
 export class MediaComponent {
   readonly photos = [
-    { src: 'picture1.jpg', caption: 'mrs mkhwanazi' },
-    { src: 'picture2.jpg', caption: 'arghh' },
-    { src: 'picture3.jpg', caption: 'mxm' },
-    { src: 'picture4.jpg', caption: 'ehh' },
-    { src: 'picture5.jpg', caption: 'some drawing' },
-    { src: 'picture6.jpg', caption: 'final product' },
-    { src: 'picture7.jpg', caption: 'haha' },
+    { src: 'picture1.jpg', caption: '{ i love it here. ❤️ }' },
+    { src: 'picture2.jpg', caption: '{ my girl. 🥹 }' },
+    { src: 'picture8.jpg', caption: '{ pretty girl. 😍 }' },
+    { src: 'picture4.jpg', caption: '{ akitsi lenna. 😂 }' },
+    { src: 'picture5.jpg', caption: '{ newly joined Mamelodi Sundowns fan. 💛 }' },
+    { src: 'picture6.jpg', caption: '{ tennis date. 🎾 }' },
+    { src: 'picture7.jpg', caption: '{ she makes me do these things. 🤭 }' },
+    { src: 'picture3.jpg', caption: '{ thebigheartedbadguy. 🖤 }' }
   ].map((photo) => ({
     ...photo,
     src: `assets/images/${photo.src}`,

@@ -1,0 +1,63 @@
+<main class="soon">
+  <a class="back" routerLink="/">&lt; /home</a>
+
+  <section class="term">
+    <header class="term__bar">
+      <span class="dot dot--pink"></span>
+      <span class="dot dot--yellow"></span>
+      <span class="dot dot--mint"></span>
+      <span class="term__title">loading_surprise.exe</span>
+    </header>
+
+    <div class="term__body">
+      <div class="hud"><span>1UP</span><span>HI-SCORE 💗 ∞</span></div>
+
+      <!-- The arcade strip: Pac-Man eats hearts, then chases the ghost back -->
+      <div class="track" [style.--cycle]="cycle + 's'" aria-hidden="true">
+        @for (p of pellets; track p.x) {
+          <svg
+            class="pellet"
+            [class.pellet--power]="p.power"
+            viewBox="0 0 100 100"
+            [style.--x]="p.x + '%'"
+            [style.animation-delay.s]="p.delay"
+          >
+            <path d="M50 90C8 60 4 30 26 17c13-7 24 2 24 11 0-9 11-18 24-11 22 13 18 43-24 73Z" />
+          </svg>
+        }
+
+        <svg class="ghost" viewBox="0 0 100 100">
+          <path
+            class="ghost__body"
+            d="M10 92V50a40 40 0 0 1 80 0v42l-13-10-13 10-14-10-14 10-13-10-13 10Z"
+          />
+          <circle cx="36" cy="48" r="10" fill="#fff" />
+          <circle cx="64" cy="48" r="10" fill="#fff" />
+          <circle class="ghost__pupil" cx="36" cy="48" r="5" />
+          <circle class="ghost__pupil" cx="64" cy="48" r="5" />
+        </svg>
+
+        <div class="pac">
+          <svg viewBox="0 0 100 100">
+            <g class="jaw jaw--top">
+              <path d="M6 50A44 44 0 0 1 94 50Z" />
+              <circle cx="56" cy="26" r="5" fill="#121117" stroke="none" />
+            </g>
+            <g class="jaw jaw--bottom">
+              <path d="M6 50A44 44 0 0 0 94 50Z" />
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <h1 class="title" aria-label="coming soon">
+        @for (ch of letters; track $index) {
+          <span [style.--i]="$index" aria-hidden="true">{{ ch === ' ' ? '\u00A0' : ch }}</span>
+        }
+      </h1>
+
+      <p class="sub">&gt; loading something special<span class="dots"></span></p>
+      <small>stay tuned 💗</small>
+    </div>
+  </section>
+</main>

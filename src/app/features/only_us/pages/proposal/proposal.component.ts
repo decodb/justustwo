@@ -2,7 +2,7 @@ import { Component, HostListener, OnDestroy, OnInit, inject, signal } from '@ang
 import { SupabaseService } from '../../../../core/services/supabase.service';
 
 type Answer = 'yes' | 'no';
-type Phase = 'typing' | 'question' | 'sent';
+type Phase = 'loading' | 'typing' | 'question' | 'sent';
 
 @Component({
   selector: 'app-proposal',
@@ -21,7 +21,7 @@ export class ProposalComponent implements OnInit, OnDestroy {
   readonly lines = [
     '> decrypting file... 100%',
     '> file found: our_story.txt',
-    'hey you.',
+    'hey my love.',
     'from the first hello to every picture in our gallery,',
     'you have become my favourite part of every day.',
     'so i have one very important question for you...',
@@ -30,13 +30,15 @@ export class ProposalComponent implements OnInit, OnDestroy {
   readonly lineMs = 500; // pause between lines
 
   // ✏️ What she sees after answering
+  readonly yesBadge = 'PROPOSAL ACCEPTED ✓';
+  readonly noBadge = 'PROPOSAL DECLINED';
   readonly yesTitle = 'you said yes 💗';
-  readonly yesMessage = 'best decision ever. i’ll see you very soon, my girlfriend.';
+  readonly yesMessage = 'i love you, my girlfriend.';
   readonly noTitle = 'thank you for being honest';
   readonly noMessage = 'that took courage, and i respect it. whatever happens, you mean a lot to me.';
 
   readonly typed = signal<string[]>([]);
-  readonly phase = signal<Phase>('typing');
+  readonly phase = signal<Phase>('loading');
   readonly choice = signal<Answer | null>(null); // answer waiting for "are you sure?"
   readonly result = signal<Answer | null>(null);
   readonly sending = signal(false);
@@ -50,17 +52,38 @@ export class ProposalComponent implements OnInit, OnDestroy {
   }));
 
   async ngOnInit(): Promise<void> {
-    try {
-      const saved = localStorage.getItem(this.storeKey);
-      if (saved === 'yes' || saved === 'no') {
-        this.result.set(saved);
-        this.phase.set('sent');
-        return;
-      }
-    } catch { /* storage unavailable, carry on */ }
+    // Has she already answered (on any device)? Then show the result, never the buttons.
+    const saved = await this.lookupAnswer();
+    if (this.destroyed) return;
+    if (saved) {
+      this.typed.set([...this.lines]); // your message stays on the page, no typing animation
+      this.result.set(saved);
+      this.phase.set('sent');
+      return;
+    }
 
+    this.phase.set('typing');
     await this.play();
     if (!this.destroyed && this.phase() === 'typing') this.phase.set('question');
+  }
+
+  // The database is the source of truth. Local storage is only a fallback if the network fails.
+  private async lookupAnswer(): Promise<Answer | null> {
+    try {
+      const remote = await this.supabase.getResponse();
+      try {
+        if (remote) localStorage.setItem(this.storeKey, remote);
+        else localStorage.removeItem(this.storeKey);
+      } catch { /* ignore */ }
+      return remote;
+    } catch {
+      try {
+        const local = localStorage.getItem(this.storeKey);
+        return local === 'yes' || local === 'no' ? local : null;
+      } catch {
+        return null;
+      }
+    }
   }
 
   skip(): void {
@@ -88,13 +111,12 @@ export class ProposalComponent implements OnInit, OnDestroy {
     this.sending.set(true);
     this.error.set('');
     try {
-      await this.supabase.submitResponse(answer);
-      try { localStorage.setItem(this.storeKey, answer); } catch { /* ignore */ }
-      this.result.set(answer);
+      const recorded = await this.supabase.submitResponse(answer);
+      try { localStorage.setItem(this.storeKey, recorded); } catch { /* ignore */ }
+      this.result.set(recorded);
       this.choice.set(null);
       this.phase.set('sent');
-    }catch (e) {
-      console.error('submit failed', e);
+    } catch {
       this.error.set('could not send > check your connection and try again');
     } finally {
       this.sending.set(false);
