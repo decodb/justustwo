@@ -13,7 +13,7 @@ export class MediaComponent {
     { src: 'picture2.jpg', caption: '{ my girl. 🥹 }' },
     { src: 'picture8.jpg', caption: '{ pretty girl. 😍 }' },
     { src: 'picture4.jpg', caption: '{ akitsi lenna. 😂 }' },
-    { src: 'picture5.jpg', caption: '{ newly joined Mamelodi Sundowns fan. 💛 }' },
+    { src: 'picture5.jpg', caption: '{ Mamelodi Sundowns. 💛 }' },
     { src: 'picture6.jpg', caption: '{ tennis date. 🎾 }' },
     { src: 'picture7.jpg', caption: '{ she makes me do these things. 🤭 }' },
     { src: 'picture3.jpg', caption: '{ thebigheartedbadguy. 🖤 }' }
