@@ -93,7 +93,8 @@ export class ProposalComponent implements OnInit, OnDestroy {
       this.result.set(answer);
       this.choice.set(null);
       this.phase.set('sent');
-    } catch {
+    }catch (e) {
+      console.error('submit failed', e);
       this.error.set('could not send > check your connection and try again');
     } finally {
       this.sending.set(false);
