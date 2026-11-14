@@ -11,8 +11,10 @@ export class MediaComponent {
   readonly photos = [
     { src: 'picture1.jpg', caption: '{ i love it here. ❤️ }' },
     { src: 'picture2.jpg', caption: '{ my girl. 🥹 }' },
+    { src: 'picture9.jpg', caption: '{ 14 Nov 26. ❤️ }' },
+    { src: 'picture10.jpg', caption: '{ 14 Nov 26. 😍 }' },
     { src: 'picture8.jpg', caption: '{ pretty girl. 😍 }' },
-    { src: 'picture4.jpg', caption: '{ akitsi lenna. 😂 }' },
+    { src: 'picture4.jpg', caption: '{ plays intensions by reece. ❤️ }' },
     { src: 'picture5.jpg', caption: '{ Mamelodi Sundowns. 💛 }' },
     { src: 'picture6.jpg', caption: '{ tennis date. 🎾 }' },
     { src: 'picture7.jpg', caption: '{ she makes me do these things. 🤭 }' },
